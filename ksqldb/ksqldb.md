@@ -166,5 +166,3 @@ CREATE TABLE logins_status_s AS
   HAVING name LIKE 's%'
   EMIT CHANGES; 
 ```
-
--- HAVING name LIKE 's%'
