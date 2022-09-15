@@ -1,2 +1,0 @@
-[{"header":{"queryId":"query_1663221754611","schema":"`PERSON` STRING KEY, `LATEST_LOCATION` STRING, `LOCATION_CHANGES` BIGINT, `UNIQUE_LOCATIONS` BIGINT"}},
-{"row":{"columns":["Allison","Boulder",2,2]}}]
