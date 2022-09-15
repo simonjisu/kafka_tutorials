@@ -30,7 +30,7 @@ if __name__ == '__main__':
     # Subscribe to topic
     topic = "purchases"
     consumer.subscribe([topic], on_assign=reset_offset)
-    DATETIME_FMT = '%Y-%m-%d %H:%M:%S'
+    DATETIME_FMT = '%Y-%m-%d''T''%H:%M:%S'
     # Poll for new messages from Kafka and print them.
     try:
         while True:
@@ -44,10 +44,16 @@ if __name__ == '__main__':
                 print("ERROR: %s".format(msg.error()))
             else:
                 # Extract the (optional) key and value, and print.
-                
-                print("[{t}] Consumed event from topic {topic}: key = {key:12} value = {value:12}".format(
-                    t=dt.now().strftime(DATETIME_FMT), 
-                    topic=msg.topic(), key=msg.key().decode('utf-8'), value=msg.value().decode('utf-8')))
+                utc_time = msg.timestamp()[1]
+                if utc_time > 1e10:
+                    utc_time /= 1e3
+                print("[{t}] topic {topic}: offset = {offset} key = {key:10} value = {value:12}".format(
+                        t=dt.utcfromtimestamp(utc_time).strftime(DATETIME_FMT), 
+                        offset=msg.offset(),
+                        topic=msg.topic(), 
+                        key=msg.key().decode('utf-8'), 
+                        value=msg.value().decode('utf-8')
+                    ))
     except KeyboardInterrupt:
         pass
     finally:

@@ -1,3 +1,4 @@
+# https://docs.confluent.io/platform/current/clients/confluent-kafka-python/html/index.html
 from confluent_kafka  import Producer
 from argparse import ArgumentParser, FileType
 from configparser import ConfigParser
@@ -18,15 +19,21 @@ if __name__ == '__main__':
     config = dict(config_parser['default'])
 
     producer = Producer(config)
-
-    DATETIME_FMT = '%Y-%m-%d %H:%M:%S'
-
+    DATETIME_FMT = '%Y-%m-%d''T''%H:%M:%S'
     def delivery_callback(err, msg):
         if err:
             print('ERROR: Message failed delivery: {}'.format(err))
         else:
-            print("[{t}] Produced event to topic {topic}: key = {key:12} value = {value:12}".format(
-                t=dt.now().strftime(DATETIME_FMT), topic=msg.topic(), key=msg.key().decode('utf-8'), value=msg.value().decode('utf-8')))
+            utc_time = msg.timestamp()[1]
+            if utc_time > 1e10:
+                utc_time /= 1e3
+            print("[{t}] topic {topic}: offset = {offset} key = {key:12} value = {value:12}".format(
+                    t=dt.utcfromtimestamp(utc_time).strftime(DATETIME_FMT), 
+                    offset=msg.offset(),
+                    topic=msg.topic(), 
+                    key=msg.key().decode('utf-8'), 
+                    value=msg.value().decode('utf-8')
+                ))
 
     # Produce data by selecting random values from these lists.
     topic = "purchases"
@@ -38,8 +45,14 @@ if __name__ == '__main__':
             time.sleep(random_wait)
             user_id = choice(user_ids)
             product = choice(products)
-            producer.produce(topic, product, user_id, callback=delivery_callback)
-            producer.poll(10000)
+            producer.produce(
+                topic=topic, 
+                value=product, 
+                key=user_id, 
+                timestamp=int(dt.utcnow().timestamp()),
+                callback=delivery_callback
+            )
+            producer.poll(100)
     except KeyboardInterrupt:
         pass
     finally:

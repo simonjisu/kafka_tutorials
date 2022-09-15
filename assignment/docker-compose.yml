@@ -202,41 +202,6 @@ services:
     entrypoint: /bin/sh
     tty: true
 
-  schema-registry-ui:
-    image: landoop/schema-registry-ui:0.9.4
-    hostname: schema-registry-ui
-    container_name: schema-registry-ui
-    networks:
-      - kafkanet
-    ports:
-      - "8001:8000"
-    environment:
-      SCHEMAREGISTRY_URL: http://schema-registry:8081/
-      PROXY: "true"
-    depends_on:
-      - schema-registry
-
-  kafka-topics-ui:
-    image: landoop/kafka-topics-ui:0.9.4
-    hostname: kafka-topics-ui
-    container_name: kafka-topics-ui
-    networks:
-      - kafkanet
-    ports:
-      - "8000:8000"
-    environment:
-      KAFKA_REST_PROXY_URL: "http://rest-proxy:8082/"
-      PROXY: "true"
-    depends_on:
-      - zoo1
-      - zoo2
-      - zoo3
-      - kafka1
-      - kafka2
-      - kafka3
-      - schema-registry
-      - rest-proxy
-
   kafka-connect:
     image: confluentinc/cp-kafka-connect:7.2.1
     hostname: kafka-connect
@@ -275,34 +240,20 @@ services:
       - schema-registry
       - rest-proxy
 
-  kafka-connect-ui:
-    image: landoop/kafka-connect-ui:0.9.4
-    hostname: kafka-connect-ui
-    container_name: kafka-connect-ui
+  kafka-ui:
+    image: provectuslabs/kafka-ui
+    container_name: kafka-ui
     networks:
       - kafkanet
     ports:
-      - "8003:8000"
+      - "8080:8080"
+    restart: always
     environment:
-      CONNECT_URL: "http://kafka-connect:8083/"
-      PROXY: "true"
-    depends_on:
-      - kafka-connect
-
-  zoonavigator:
-    image: elkozmon/zoonavigator:1.1.2
-    container_name: zoonavigator
-    networks:
-      - kafkanet
-    ports:
-     - "8004:8000"
-    environment:
-      HTTP_PORT: 8000
-      AUTO_CONNECT_CONNECTION_STRING: zoo1:2181,zoo2:2181,zoo3:2181
-    depends_on:
-      - zoo1
-      - zoo2
-      - zoo3
+      KAFKA_CLUSTERS_0_NAME: local
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka1:9092,kafka2:9092,kafka3:9092
+      KAFKA_CLUSTERS_0_ZOOKEEPER: zoo1:2181,zoo2:2182,zoo3:2183
+      KAFKA_CLUSTERS_0_SCHEMAREGISTRY: http://schema-registry:8081
+      KAFKA_CLUSTERS_0_KSQLDBSERVER: http://ksqldb-server:8088
 
 networks:
   kafkanet:
