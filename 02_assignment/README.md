@@ -30,31 +30,31 @@ You are a data scientist in a financial card company. Some users try to hack the
 
 Please do following instruction and write your code for each question:
 
-1. Run producer application `producer.py`(do not stop it).
-2. Create a source connector called `transaction_reader` using `JdbcSourceConnector`. The producer will send every 10 data into the Kafka cluster. Check it with `PRINT [topic_name] FROM BEGINNING;`.
-3. Create a stream called `transactions` with the proper topic name.
-4. Write a monitoring query. You need to keep tracking if someone's summation of `amount` is larger than a threshold(=1000000000) for every day. Please refer `WINDOW` statement in [ksql documentation](https://docs.ksqldb.io/en/latest/developer-guide/ksqldb-reference/select-pull-query/#window). You have to give the following column names in the table: 
+1. (1 pt) Run producer application `producer.py`(do not stop it).
+2. (1 pt) Create a source connector called `transaction_reader` using `JdbcSourceConnector`. The producer will send every 10 data into the Kafka cluster. Check it with `PRINT [topic_name] FROM BEGINNING;`.
+3. (1 pt) Create a stream called `transactions` with the proper topic name.
+4. (3 pt) Write a monitoring query. You need to keep tracking if someone's summation of `amount` is larger than a threshold(=1000000000) for every day. Please refer `WINDOW` statement in [ksql documentation](https://docs.ksqldb.io/en/latest/developer-guide/ksqldb-reference/select-pull-query/#window). You have to give the following column names in the table: 
     * `win_start`: The window start with 'yyyy-MM-dd' format
     * `win_end`: The window end with 'yyyy-MM-dd' format
     * `last_trial_time`: The last timestamp the user uses the card between the window(=1 day). The format is 'yyyy-MM-dd''T''HH:mm:ss'.
     * `name`: User name extracted from `email_address` 
     * `card_number`: Card number
     * `sum_amount`: Summation of `amount`
-5. Create a table called `avg_normal_amount` group by card user name. You have to give the following column names in the table: 
+5. (1 pt) Create a table called `avg_normal_amount` group by card user name. You have to give the following column names in the table: 
     * `name`: User name extracted from `email_address` 
     * `count`: Number of card usage
     * `sum_amount`: Summation of `amount`
-6. From `avg_normal_amount` table or `transactions` stream, (1) how do you think about the threshold(current = 1000000000) for monitoring in question 4? Is it reasonable? (2) How about monitoring window(current = 1day)? Please describe your thought and why.
+6. (2 pt) From `avg_normal_amount` table or `transactions` stream, (1) how do you think about the threshold(current = 1000000000) for monitoring in question 4? Is it reasonable? (2) How about monitoring window(current = 1day)? Please describe your thought and why.
 
 ---
 
 # Part 2. Try yourself
 
-1. Find or generate a dataset that you are interested in. You can use existed `docker-compose.yml` to build your Kafka cluster or use other tools like product of `confluent.io`. Please describe how you loaded data with the code(it must be executable, TA will run your code line by line).
-2. Define the system architecture:
+1. (3 pt) Find or generate a dataset that you are interested in. You can use existed `docker-compose.yml` to build your Kafka cluster or use other tools like product of `confluent.io`. Please describe how you loaded data with the code(it must be executable, TA will run your code line by line).
+2. (2 pt) Define the system architecture:
     a. What is your source application(producer)? Describe what your source application does.
     b. What is your target application(consumer)? Describe what your target application does.
-3. Ask three questions with your scenarios in ksqlDB from your streaming data. One of the queries must use `WINDOW` statement.
+3. (1 pt) Ask three questions with your scenarios in ksqlDB from your streaming data. One of the queries must use `WINDOW` statement.
 
 Useful documents:
 
