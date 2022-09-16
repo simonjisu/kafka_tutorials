@@ -5,7 +5,6 @@ name = "pypi"
 
 [packages]
 confluent-kafka = "*"
-ksql = "*"
 psycopg = {extras = ["binary"], version = "*"}
 
 [dev-packages]
