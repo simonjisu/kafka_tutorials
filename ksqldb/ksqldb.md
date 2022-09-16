@@ -91,6 +91,26 @@ curl -s -o response.txt -X "POST" "http://localhost:8088/query" \
 
 references: https://docs.ksqldb.io/en/0.10.2-ksqldb/tutorials/embedded-connect/
 
+after run your machine, lets insert some data using python
+
+```shell
+python generate.py
+```
+
+and run ksqlDB CLI
+
+```shell
+docker exec -it ksqldb-cli ksql http://ksqldb-server:8088
+```
+
+before you issue more commands, tell ksqlDB to start all queries from earliest point in each topic:
+
+```sql
+SET 'auto.offset.reset' = 'earliest';
+```
+
+create connector with JDBC Connector
+
 ```
 CREATE SOURCE CONNECTOR jdbc_login_reader WITH (
   'connector.class'          = 'io.confluent.connect.jdbc.JdbcSourceConnector',
@@ -107,24 +127,20 @@ CREATE SOURCE CONNECTOR jdbc_login_reader WITH (
 ```
 
 ```sql
-show connectors;
+SHOW CONNECTORS;
 ```
 
 ```sql
 SHOW TOPICS;
 ```
 
-```sql
-SET 'auto.offset.reset' = 'earliest';
--- use UNSET to revert
-```
-
 Table Info: login
-  lid: INTEGER PRIMARY
-  ts: VARCHAR(255)
-  name: VARCHAR(255)
-  location: INTEGER
+- `lid`: `INTEGER PRIMARY`
+- `ts`: `VARCHAR(255)`
+- `name`: `VARCHAR(255)`
+- `location`: `INTEGER`
 
+create stream
 
 ```sql
 CREATE STREAM logins
@@ -136,33 +152,37 @@ WITH (
 );
 ```
 
-https://docs.ksqldb.io/en/latest/developer-guide/ksqldb-reference/select-push-query/
+see documentation to run some queries: https://docs.ksqldb.io/en/latest/developer-guide/ksqldb-reference/
 
-WHERE ROWTIME >= '2017-11-17T04:53:45'
-    AND ROWTIME <= '2017-11-17T04:53:48'
+Select the stream data where login location is 1 
 
 ```sql
 SELECT ts, name, location 
-FROM LOGINS
-WHERE location = 1
-LAST 5;
-```
-
-window 
-
-```
-SELECT location, COUNT(lid)
 FROM logins
-WINDOW TUMBLING (SIZE 1 DAY)
-GROUP BY location
+WHERE location = 1
+LIMIT 5;
+```
+
+Select the stream data in Sep. and Oct.
+
+```sql
+SELECT * FROM logins
+WHERE ts >= '2022-09-01T00:00:00'
+  AND ts <= '2022-10-31T23:59:59'
 EMIT CHANGES;
 ```
 
+https://docs.ksqldb.io/en/latest/concepts/time-and-windows-in-ksqldb-queries/
+
+process by window: see how many people login at each location for each 15 days  
+
 ```sql
-CREATE TABLE logins_status_s AS
-  SELECT name, COUNT(lid) AS num_logins, LATEST_BY_OFFSET(ts) AS last_login
-  FROM logins
-  GROUP BY name
-  HAVING name LIKE 's%'
-  EMIT CHANGES; 
+SELECT 
+  FORMAT_TIMESTAMP(FROM_UNIXTIME(windowstart), 'yyyy-MM-dd') AS win_start, 
+  FORMAT_TIMESTAMP(FROM_UNIXTIME(windowend), 'yyyy-MM-dd') AS win_end,
+  location, COUNT_DISTINCT(name)
+FROM logins
+WINDOW TUMBLING (SIZE 15 DAY)
+GROUP BY location
+EMIT CHANGES;
 ```
