@@ -24,7 +24,7 @@ You are a data scientist in a financial card company. Some users try to hack the
 |:--:|---| --- |
 | tid | INTEGER PRIMARY KEY NOT NULL | Index of Table |
 | ts | VARCHAR(30) | Timestamp that a user use the card |
-| email_address | VARCHAR(100) | Email address, composed of 'name' + '@card.com' |
+| email_address | VARCHAR(100) | Email address, composed of 'user name' + '@card.com' |
 | card_number | VARCHAR(20) | Card number |
 | amount | NUMERIC(20, 2) | Amout of usage |
 
