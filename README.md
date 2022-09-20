@@ -55,8 +55,11 @@ To run kafka with `Kafka CLI` in `example`, need to download Kafka binary with 2
 
     ```
     confluent-kafka
-    psycopg[binary]
+    "psycopg[binary]"
     ```
+
+    * confluent-kafka: https://pypi.org/project/confluent-kafka/
+    * psycopg-binary: https://pypi.org/project/psycopg-binary/
 
 ## Contents
 
