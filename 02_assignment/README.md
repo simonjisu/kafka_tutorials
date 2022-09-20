@@ -18,9 +18,9 @@ $ docker-compose up -d
 
 <img src="./bitcoin.jpg" width="40%">
 
-You are a data scientist in a financial card company. Some users try to hack the system to spend a lot of money, which is unreasonable. It would be best if you detected these abnormalities. So, you tried to build a simulation system to run some experiments. All the data will be generated from a python code(`producer.py`) and inserted into the PostgreSQL database. Information about table `transaction` is as follows: 
+You are a data scientist in a financial card company. Some users try to hack the system to spend a lot of money, which is unreasonable. It would be best if you detected these abnormalities. So, you tried to build a simulation system to run some experiments. All the data will be generated from a python code(`producer.py`) and inserted into the PostgreSQL database. Information about table `transactions` is as follows: 
 
-| Column Name | Type | Describe |
+| Column Name | Type | Description |
 |:--:|---| --- |
 | tid | INTEGER PRIMARY KEY NOT NULL | Index of Table |
 | ts | VARCHAR(30) | Timestamp that a user use the card |
@@ -50,7 +50,7 @@ Please do following instruction and write your code for each question:
 
 # Part 2. Try yourself
 
-1. Find or generate a dataset that you are interested in. You can use existed `docker-compose.yml` to build your Kafka cluster or use other tools like product of `confluent.io`. Please describe how you loaded data with the code(it must be executable, TA will run your code line by line).
+1. Find or generate a dataset that you are interested in. You can use existing `docker-compose.yml` to build your Kafka cluster or use other tools like the product of `confluent.io`. Please describe how you loaded data with the code(it must be executable, TA will run your code line by line).
 2. Define the system architecture:
     a. What is your source application(producer)? Describe what your source application does.
     b. What is your target application(consumer)? Describe what your target application does.
