@@ -48,7 +48,7 @@ To run kafka with `Kafka CLI` in `example`, need to download Kafka binary with 2
 
 ### 4. Python
 
-* Required version: `3.8`
+* Required version: `3.7` or `3.10`
 * Packages to install: 
 
     Please run `pip install` with following packages
