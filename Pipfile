@@ -6,6 +6,10 @@ name = "pypi"
 [packages]
 confluent-kafka = "*"
 psycopg = {extras = ["binary"], version = "*"}
+pandas = "*"
+psycopg2-binary = "*"
+sqlalchemy = "*"
+tqdm = "*"
 
 [dev-packages]
 
