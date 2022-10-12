@@ -22,8 +22,6 @@ Please do following instruction and write your code for each question:
     ```bash
     python ./producer.py
     ```
-    - -2.5 points
-        - blank, no command to run `producer.py`
 
 2. (20pt) Create a source connector called `transaction_reader` using `JdbcSourceConnector`. The producer will send every 10 data into the Kafka cluster. Check it with `PRINT [topic_name] FROM BEGINNING;`.
     ```sql
@@ -90,6 +88,8 @@ Please do following instruction and write your code for each question:
         - missing feature name
         - wrong condition: e.g., `HAVING < 1000000000`
         - unable to run functions like `LEFT` since it is a reserved keyword and it can't be used as an identifier
+        - wrong/unnecessary query statement
+        - missing conditions
 
 5. (10pt) Create a table called `sum_normal_amount` group by user name. You have to give the following column names in the table: 
     * `name`: User name extracted from `email_address` 
@@ -109,8 +109,10 @@ Please do following instruction and write your code for each question:
     - -1 points 
         - add window statements
         - unmatched column name
+        - wrong table name
     - -2.5 points
         - unable to run functions like `LEFT` since it is a reserved keyword and it can't be used as an identifier
+        - unnecessary query statement
     - -5 points
         - Didn't create table
 
@@ -149,3 +151,4 @@ Please do following instruction and write your code for each question:
     - -2.5 points
         - cannot get results: mismatch with your inserted data e.g., `'false'` - `'FALSE'`
         - cannot understand some parts in the query
+        - didn't write SQL for questions
